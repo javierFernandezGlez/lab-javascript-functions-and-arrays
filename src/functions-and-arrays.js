@@ -1,24 +1,75 @@
 // Iteration #1: Find the maximum
-function maxOfTwoNumbers() {}
+function maxOfTwoNumbers(number1, number2) {
+  if(number1 >= number2) {
+    return number1;
+  }
+  return number2;
+}
 
 
 
 // Iteration #2: Find longest word
 const words = ['mystery', 'brother', 'aviator', 'crocodile', 'pearl', 'orchard', 'crackpot'];
 
-function findLongestWord() {}
+function findLongestWord(words) {
+  let n = words.length;
+  if(n === 0) {
+    return null;
+  }
+  let M = 0;
+  let ans = "";
+  
+  for(let word of words) {
+    let currentLength = word.length;
+    if(currentLength > M) {
+      M = currentLength;
+      ans = word;
+    }
+  }
+  return ans;
+}
 
 
 
 // Iteration #3: Calculate the sum
 const numbers = [6, 12, 1, 18, 13, 16, 2, 1, 8, 10];
 
-function sumNumbers() {}
+function sumNumbers(array) {
+  let n = array.length;
+  let s = 0;
+  for(let i = 0; i < n; i++) {
+    s += array[i];
+  }
+  return s;
+}
 
 
 
 // Iteration #3.1 Bonus:
-function sum() {}
+function sum(array) {
+  let n = array.length;
+  let s = 0;
+  
+  for(let i = 0; i < n; i++) {
+    let element = array[i];
+    
+    if(typeof element === "boolean") {
+      if(element) {
+        s++;
+      }
+    }
+    else if(typeof element === "string") {
+      s += element.length;
+    }
+    else if(typeof element === "number"){
+      s += element;
+    }
+    else {
+      throw Error("Unsupported data type sir or ma'am");
+    }
+  }
+  return s;
+}
 
 
 
@@ -26,16 +77,37 @@ function sum() {}
 // Level 1: Array of numbers
 const numbersAvg = [2, 6, 9, 10, 7, 4, 1, 9];
 
-function averageNumbers() {}
+function averageNumbers(array) {
+  let n = array.length;
+  if(n === 0) {
+    return null;
+  }
+  let s = sumNumbers(array);
+  return s/n;
+}
 
 
 // Level 2: Array of strings
 const wordsArr = ['seat', 'correspond', 'linen', 'motif', 'hole', 'smell', 'smart', 'chaos', 'fuel', 'palace'];
 
-function averageWordLength() { }
+function averageWordLength(array) {
+  let n = array.length;
+  if(n === 0) {
+    return null;
+  }
+  let s = sum(array);
+  return s/n;
+}
 
 // Bonus - Iteration #4.1
-function avg() {}
+function avg(array) {
+  let n = array.length;
+  if(n === 0) {
+    return null;
+  }
+  let s = sum(array);
+  return s/n;
+}
 
 // Iteration #5: Unique arrays
 const wordsUnique = [
@@ -52,14 +124,35 @@ const wordsUnique = [
   'bring'
 ];
 
-function uniquifyArray() {}
+function uniquifyArray(array) {
+  if(!array.length) {
+    return null;
+  }
+  let ans = [];
+  let s = new Set(array);
+  for(let element of s) {
+      ans.push(element);
+  }
+  return ans;
+}
 
 
 
 // Iteration #6: Find elements
 const wordsFind = ['machine', 'subset', 'trouble', 'starting', 'matter', 'eating', 'truth', 'disobedience'];
 
-function doesWordExist() {}
+function doesWordExist(words, wordToFind) {
+  let n = words.length;
+  if(n === 0) {
+    return null;
+  }
+  for(let word of words) {
+    if(word === wordToFind) {
+      return true;
+    }
+  }
+  return false;
+}
 
 
 
@@ -78,7 +171,17 @@ const wordsCount = [
   'matter'
 ];
 
-function howManyTimes() {}
+function howManyTimes(words, wordToFind) {
+  let n = words.length;
+  let count = 0;
+  
+  for(let word of words) {
+    if(word === wordToFind) {
+      count++;
+    }
+  }
+  return count;
+}
 
 
 
@@ -106,7 +209,120 @@ const matrix = [
   [1, 70, 54, 71, 83, 51, 54, 69, 16, 92, 33, 48, 61, 43, 52, 1, 89, 19, 67, 48]
 ];
 
-function greatestProduct() {}
+//first let's build a function to find the max product for a specific row
+function rowMaxProduct(matrix, i) {
+  let row = matrix[i];
+  let n = row.length;
+  let start = 0;
+  let max = -Infinity;
+  let product = 1;
+  let hasZero = false;
+  
+  for(let end = 0; end < n; end++) {
+    if(row[end] === 0) {
+      hasZero = true;
+      start = end + 1;
+      product = 1;
+    }
+    else {
+      product *= row[end];
+    }
+    
+    if(end - start + 1 === 4) {
+      max = Math.max(max, product);
+      product /= row[start];
+      start++;
+    }
+  }
+  if(hasZero && max < 0) {
+    return 0;
+  }
+  return max;
+}
+
+//Now let's build a function to find the max product for a specific column
+
+function colMaxProduct(matrix, j) {
+  let n = matrix.length;
+  let start = 0;
+  let max = -Infinity;
+  let product = 1;
+  let hasZero = false;
+  
+  for(let end = 0; end < n; end++) {
+    
+    if(matrix[end][j] === 0) {
+      hasZero = true;
+      start = end + 1;
+      product = 1;
+    }
+    else {
+      product *= matrix[end][j];
+    }
+    
+    if(end - start + 1 === 4) {
+      max = Math.max(max, product);
+      product /= matrix[start][j];
+      start++;
+    }
+  }
+  
+  if(hasZero && max < 0) {
+    return 0;
+  }
+  return max;
+}
+
+function greatestProduct(matrix) {
+  let rows = matrix.length;
+  let cols = matrix[0].length;
+  let maxRows = -Infinity;
+  let maxCols = -Infinity;
+  
+  for(let i = 0; i < rows; i++) {
+    let currentMax = rowMaxProduct(matrix, i);
+    maxRows = Math.max(currentMax, maxRows);
+  }
+  
+  for(let j = 0; j < cols; j++) {
+    let currentMax = colMaxProduct(matrix, j);
+    maxCols = Math.max(currentMax, maxCols);
+  }
+  
+  return Math.max(maxRows, maxCols);
+}
+
+data = [
+  [1,2,3,4,5],
+  [1,2,3,4,5],
+  [2,3,4,5,6],
+  [5,6,8,9,10],
+  [1,2,3,4,5]]
+
+console.log(greatestProduct(data));
+
+function greatestProductOfDiagonals(matrix) {
+  let max = -Infinity;
+  let directions = [-1,1];
+  let rows = matrix.length;
+  let cols = matrix[0].length;
+  
+  for(let direction of directions) {
+    for(let row = 0; row < rows - 3; row++) {
+      for(let col = 0; col < cols - 3; col++) {
+        if(direction === -1) {
+          col = cols - 1 - col;
+        }
+        let product = 1;
+        for(let i = 0; i < 4; i++) {
+          product *= matrix[row + i][col + i*direction];
+        }
+        max = Math.max(product, max);
+      }
+    }
+  }
+  return max;
+}
 
 
 
